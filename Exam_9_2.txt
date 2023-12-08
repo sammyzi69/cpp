@@ -1,0 +1,121 @@
+Implement In-order Threaded Binary Tree and traverse it in In-order and
+Pre-order.
+#include <iostream>
+#define MAX_VALUE 65536
+using namespace std;
+class Node
+{ //node declaration
+public:
+int k;
+Node *l, *r;
+bool leftTh, rightTh;
+};
+class ThreadedBinaryTree
+{
+private:
+Node *root;
+public:
+ThreadedBinaryTree()
+{ //constructor to initialize the variables
+root= new Node();
+root->r= root->l= root;
+root->leftTh = true;
+root->k = MAX_VALUE;
+}
+void insert(int key)
+{
+
+Node *p = root;
+for (;;){
+if (p->k< key)
+{ //move to right thread
+if (p->rightTh)
+break;
+p = p->r;
+}
+else if (p->k > key)
+{ // move to left thread
+if (p->leftTh)
+break;
+p = p->l;
+}
+else
+{
+return;
+}
+}
+Node *temp = new Node();
+temp->k = key;
+temp->rightTh= temp->leftTh= true;
+if (p->k < key)
+{
+temp->r = p->r;
+temp->l= p;
+
+p->r = temp;p->rightTh= false;
+}
+else
+{
+temp->r = p;
+temp->l = p->l;
+p->l = temp;
+p->leftTh = false;
+}
+}
+void inorder()
+{ //print the tree
+Node *temp = root, *p;
+for(;;)
+{
+p = temp;
+temp = temp->r;
+if (!p->rightTh)
+{
+while (!temp->leftTh)
+{
+temp = temp->l;
+}
+}
+if (temp == root)
+break;cout<<temp->k<<" ";
+
+}
+cout<<endl;
+}
+};
+int main() {
+ThreadedBinaryTree tbt;
+int ch, n;
+do{
+
+cout<<"\n1) insert"<<endl;
+cout<<"2) inorder"<<endl;
+cout<<"3) Exit"<<endl;
+cout<<"\nEnter Your Choice"<<endl;
+cin>>ch;
+
+switch(ch)
+{
+case 1:
+cout<<"Enter the value to be inserted:";
+cin>>n;
+tbt.insert(n);
+break;
+case 2:
+
+cout<<"Threaded Binary Tree"<<endl;
+
+tbt.inorder();
+cout<<"";
+break;
+case 3:
+cout<<"Goodbye!"<<endl;
+break;
+default:
+cout<<"Enter a valid choice";
+}
+
+}while(ch!=3);
+}
+
+
